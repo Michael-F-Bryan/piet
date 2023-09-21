@@ -7,9 +7,11 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+#[cfg(not(target_arch = "wasm32"))]
+use font_kit::source::SystemSource;
 use font_kit::{
     handle::Handle,
-    source::{Source, SystemSource},
+    source::Source,
     sources::{mem::MemSource, multi::MultiSource},
 };
 use piet::kurbo::{Point, Rect, Size};
@@ -37,6 +39,7 @@ impl Text {
     pub fn new() -> Self {
         Text {
             source: Arc::new(Mutex::new(MultiSource::from_sources(vec![
+                #[cfg(not(target_arch = "wasm32"))]
                 Box::new(SystemSource::new()),
                 Box::new(MemSource::empty()),
             ]))),
